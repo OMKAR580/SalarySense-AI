@@ -1,0 +1,10 @@
+class TokenException(Exception): pass
+class TokenReplayDetected(TokenException): pass
+class TokenBlacklisted(TokenException): pass
+class TokenRevoked(TokenException): pass
+class TokenRotationFailed(TokenException): pass
+class PolicyViolation(TokenException): pass
+class KeyResolutionFailed(TokenException): pass
+class ProviderUnavailable(TokenException): pass
+class SessionBindingError(TokenException): pass
+class RiskValidationFailed(TokenException): pass

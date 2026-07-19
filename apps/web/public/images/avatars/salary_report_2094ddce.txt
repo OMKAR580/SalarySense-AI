@@ -1,0 +1,26 @@
+=====================================================
+            SALARYSENSE AI PREDICTION REPORT
+=====================================================
+Report ID: 2094ddce-c322-4bf4-830a-50e76f8b7430
+Generated On: 7/19/2026, 2:47:54 PM
+ML Model: Ridge Regression (v1.0.4-prod)
+
+-----------------------------------------------------
+EMPLOYEE COMPENSATION ANALYSIS
+-----------------------------------------------------
+Estimated Salary: ₹2,562,432 / year
+Target Job Title: Web developer
+Years of Experience: 1 years
+Evaluation Flow: MANUAL Form Analysis
+
+-----------------------------------------------------
+PREPARATION DATA SUMMARY
+-----------------------------------------------------
+- Base Salary Range Min: $2,306,189
+- Base Salary Range Max: $2,818,675
+- Confidence Index: 91.2%
+- Accuracy Rating: Enterprise-Grade (High Precision)
+
+-----------------------------------------------------
+Generated automatically by SalarySense AI. All rights reserved.
+=====================================================

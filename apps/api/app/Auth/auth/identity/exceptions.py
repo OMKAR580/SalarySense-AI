@@ -1,0 +1,12 @@
+class IdentityException(Exception): pass
+class IdentityNotFound(IdentityException): pass
+class IdentityLocked(IdentityException): pass
+class IdentityDisabled(IdentityException): pass
+class IdentityDeleted(IdentityException): pass
+class IdentityConflict(IdentityException): pass
+class IdentityValidationFailed(IdentityException): pass
+class IdentityResolutionFailed(IdentityException): pass
+class IdentityRepositoryFailure(IdentityException): pass
+class IdentityMappingFailure(IdentityException): pass
+class IdentityCacheFailure(IdentityException): pass
+class IdentityResolutionTimeout(IdentityException): pass

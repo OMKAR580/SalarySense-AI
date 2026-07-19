@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+:root {
+  /* Slate 50 to 900 for Light Mode */
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --foreground: #0f172a;
+  --muted: #94a3b8;
+  --border: #e2e8f0;
+  
+  --primary: #0f172a;
+  --secondary: #f1f5f9;
+  --accent: #3b82f6;
+  
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #3b82f6;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Slate 950 to 50 for Dark Mode */
+    --background: #020617;
+    --surface: #0f172a;
+    --foreground: #f8fafc;
+    --muted: #64748b;
+    --border: #1e293b;
+    
+    --primary: #f8fafc;
+    --secondary: #1e293b;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-info: var(--info);
+  
+  /* Landing Page specific dark tokens */
+  --color-landing-bg: #030712;
+  --color-landing-surface: #0a0f1c;
+  --color-landing-card: #121928;
+  --color-landing-card-alt: #0a1128;
+  
+  --font-sans: var(--font-geist-sans), "Inter", Arial, Helvetica, sans-serif;
+  --font-mono: var(--font-geist-mono), "JetBrains Mono", monospace;
+  --font-heading: var(--font-bricolage), "Bricolage Grotesque", sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+/* Accessibility: Global reduced motion override */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

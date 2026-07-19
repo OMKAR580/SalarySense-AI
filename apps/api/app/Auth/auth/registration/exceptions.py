@@ -1,0 +1,9 @@
+class RegistrationException(Exception): pass
+class RegistrationFailed(RegistrationException): pass
+class DuplicateEmail(RegistrationException): pass
+class DuplicateUsername(RegistrationException): pass
+class TermsNotAccepted(RegistrationException): pass
+class PasswordMismatch(RegistrationException): pass
+class PasswordTooWeak(RegistrationException): pass
+class RoleAssignmentFailed(RegistrationException): pass
+class VerificationTokenFailed(RegistrationException): pass
