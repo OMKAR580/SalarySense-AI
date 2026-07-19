@@ -27,7 +27,8 @@
     "tailwind-merge": "^3.6.0",
     "three": "^0.185.1",
     "zod": "^4.4.3",
-    "zustand": "^5.0.14"
+    "zustand": "^5.0.14",
+    "lightningcss-linux-x64-gnu": "^1.22.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1",
@@ -38,13 +39,9 @@
     "eslint": "^9",
     "eslint-config-next": "^15.2.1",
     "husky": "^9.1.7",
-    "lightningcss-linux-x64-gnu": "^1.22.1",
     "lint-staged": "^17.0.8",
     "prettier": "^3.9.4",
     "tailwindcss": "^4",
     "typescript": "^5"
-  },
-  "optionalDependencies": {
-    "lightningcss-linux-x64-gnu": "^1.22.1"
   }
 }
