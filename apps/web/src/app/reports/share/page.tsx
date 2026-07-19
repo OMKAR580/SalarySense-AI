@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Network, FileText, Printer, Home } from "lucide-react";
 import { Button } from "@/components/ui/Button";
@@ -17,7 +17,7 @@ interface SharePayload {
   avatar: string | null;
 }
 
-export default function ShareReportPage() {
+function ShareReportContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [report, setReport] = useState<SharePayload | null>(null);
@@ -594,5 +594,17 @@ export default function ShareReportPage() {
 
       </div>
     </div>
+  );
+}
+
+export default function ShareReportPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#030712] flex items-center justify-center text-slate-400">
+        <div className="animate-pulse">Loading report...</div>
+      </div>
+    }>
+      <ShareReportContent />
+    </Suspense>
   );
 }
