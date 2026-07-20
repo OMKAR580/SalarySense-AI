@@ -55,8 +55,14 @@ class Settings(BaseSettings):
 
     @field_validator("SQLALCHEMY_DATABASE_URI", mode="before")
     def assemble_db_connection(cls, v: Optional[str], info: ValidationInfo) -> Any:
-        if isinstance(v, str):
-            return v
+        import os
+        val = v or os.getenv("SQLALCHEMY_DATABASE_URI") or os.getenv("DATABASE_URL")
+        if isinstance(val, str):
+            if val.startswith("postgres://"):
+                val = val.replace("postgres://", "postgresql+asyncpg://", 1)
+            elif val.startswith("postgresql://"):
+                val = val.replace("postgresql://", "postgresql+asyncpg://", 1)
+            return val
         values = info.data
         user = values.get("POSTGRES_USER")
         password = values.get("POSTGRES_PASSWORD")
