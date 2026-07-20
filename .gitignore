@@ -49,4 +49,6 @@ auth_dev.db
 *.db
 
 # ML Datasets
-Salary-Prediction-ML/
+Salary-Prediction-ML/datasets/raw/
+Salary-Prediction-ML/datasets/cleaned/datasets3_clean.csv
+Salary-Prediction-ML/datasets/cleaned/datasets4_clean.csv

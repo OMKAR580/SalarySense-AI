@@ -1,0 +1,15 @@
+{
+    "model": "Gradient Boosting Regressor",
+    "train_r2": 0.9853,
+    "test_r2": 0.8586,
+    "mae": 10755.88,
+    "rmse": 18414.7,
+    "features": [
+        "Age",
+        "Gender",
+        "Education Level",
+        "Job Title",
+        "Years of Experience"
+    ],
+    "target": "Salary"
+}
