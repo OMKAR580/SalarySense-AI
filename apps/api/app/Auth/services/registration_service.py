@@ -58,9 +58,7 @@ class RegistrationService:
     async def _create_user(self, request: RegisterRequest) -> Any:
         hashed_password = self.password_hasher.hash_password(request.password)
         
-        is_verified = False
-        if request.oauth_provider and request.oauth_provider_account_id:
-            is_verified = True
+        is_verified = True
 
         user_data = {
             "email": request.email,

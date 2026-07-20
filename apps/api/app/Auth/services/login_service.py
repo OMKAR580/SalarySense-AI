@@ -64,7 +64,8 @@ class LoginService:
             raise AccountLocked("Account is locked")
             
         if identity.status == IdentityStatus.UNVERIFIED:
-            raise EmailNotVerified("Email not verified")
+            # OTP verification is disabled globally
+            pass
 
         if not self.password_hasher.verify_password(request.password, identity.security.password_hash):
             if self.audit: await self.audit.record_login_failed(request.identifier, "Wrong password", ip_address)
