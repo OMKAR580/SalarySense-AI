@@ -30,10 +30,28 @@ export const PredictionDashboardLayout = () => {
   const manualPayload = session.manualPayload || {};
   
   // Resolve experience (0 is falsy, check for undefined/null instead)
-  const rawExp = manualPayload["experience"] !== undefined ? manualPayload["experience"] : manualPayload["years_of_experience"];
-  const yearsExp = (rawExp !== undefined && rawExp !== null && rawExp !== "") ? parseInt(rawExp.toString()) : 5;
+  let rawExp = manualPayload["experience"] !== undefined ? manualPayload["experience"] : manualPayload["years_of_experience"];
+  let role = manualPayload["role"] || manualPayload["job_title"];
 
-  const role = manualPayload["role"] || manualPayload["job_title"] || "Software Engineer";
+  // Fallback to history store if session payload is stale/missing (e.g. on page refresh)
+  if (rawExp === undefined || role === undefined) {
+    try {
+      const historyJson = localStorage.getItem("prediction_history");
+      if (historyJson) {
+        const history = JSON.parse(historyJson);
+        const match = history.find((h: any) => h.id === result.id);
+        if (match) {
+          if (rawExp === undefined) rawExp = match.experience;
+          if (!role) role = match.role;
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  const yearsExp = (rawExp !== undefined && rawExp !== null && rawExp !== "") ? parseInt(rawExp.toString()) : 5;
+  const resolvedRole = role || "Software Engineer";
   const department = manualPayload["department"] || "Engineering";
   const workMode = manualPayload["workMode"] || "Remote";
   const employmentType = manualPayload["employmentType"] || "Full-time";
@@ -53,7 +71,7 @@ export const PredictionDashboardLayout = () => {
           label={confidence.label} 
         />
         <ExplainabilityCard 
-          role={role} 
+          role={resolvedRole} 
           experience={yearsExp} 
           education={education}
           workMode={workMode}
@@ -64,7 +82,7 @@ export const PredictionDashboardLayout = () => {
       {/* Middle Section: Demographics & Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
         <DepartmentCard 
-          role={role} 
+          role={resolvedRole} 
           department={department} 
           workMode={workMode} 
           employmentType={employmentType} 
