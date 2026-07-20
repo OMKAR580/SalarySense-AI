@@ -36,7 +36,7 @@ class SessionRepository(BaseRepository[Session, Any, Any]):
             "user_id": user_id,
             "device_id": device_id,
             "session_token_hash": session_token_hash,
-            "expires_at": datetime.now(timezone.utc) + timedelta(minutes=duration_minutes),
+            "expires_at": datetime.utcnow() + timedelta(minutes=duration_minutes),
             "is_revoked": False
         }
         return await self.create(db, obj_in=session_data)
@@ -64,7 +64,7 @@ class SessionRepository(BaseRepository[Session, Any, Any]):
         query = select(self.model).filter(
             self.model.user_id == user_id,
             self.model.is_revoked == False,
-            self.model.expires_at > datetime.now(timezone.utc)
+            self.model.expires_at > datetime.utcnow()
         )
         result = await db.execute(query)
         return list(result.scalars().all())
@@ -108,7 +108,7 @@ class SessionRepository(BaseRepository[Session, Any, Any]):
         Return Type: None
         Raises: None
         """
-        query = delete(self.model).filter(self.model.expires_at <= datetime.now(timezone.utc))
+        query = delete(self.model).filter(self.model.expires_at <= datetime.utcnow())
         await db.execute(query)
         await db.flush()
 

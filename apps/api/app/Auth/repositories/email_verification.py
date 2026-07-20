@@ -34,7 +34,7 @@ class EmailVerificationRepository(BaseRepository[EmailVerificationToken, Any, An
         query = select(self.model).filter(
             self.model.token_hash == hashed,
             self.model.is_used == False,
-            self.model.expires_at > datetime.now(timezone.utc)
+            self.model.expires_at > datetime.utcnow()
         )
         result = await db.execute(query)
         return result.scalars().first()
@@ -63,7 +63,7 @@ class EmailVerificationRepository(BaseRepository[EmailVerificationToken, Any, An
         Return Type: None
         Raises: None
         """
-        query = delete(self.model).filter(self.model.expires_at <= datetime.now(timezone.utc))
+        query = delete(self.model).filter(self.model.expires_at <= datetime.utcnow())
         await db.execute(query)
         await db.flush()
 

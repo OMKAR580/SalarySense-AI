@@ -45,7 +45,7 @@ class RefreshTokenRepository(BaseRepository[RefreshToken, Any, Any]):
         """
         rt = await self.get_token(db, token)
         if rt:
-            rt.revoked_at = datetime.now(timezone.utc)
+            rt.revoked_at = datetime.utcnow()
             db.add(rt)
             await db.flush()
         return rt
@@ -63,7 +63,7 @@ class RefreshTokenRepository(BaseRepository[RefreshToken, Any, Any]):
         result = await db.execute(query)
         tokens = result.scalars().all()
         for t in tokens:
-            t.revoked_at = datetime.now(timezone.utc)
+            t.revoked_at = datetime.utcnow()
             db.add(t)
         await db.flush()
 
@@ -75,7 +75,7 @@ class RefreshTokenRepository(BaseRepository[RefreshToken, Any, Any]):
         Return Type: None
         Raises: None
         """
-        query = delete(self.model).filter(self.model.expires_at <= datetime.now(timezone.utc))
+        query = delete(self.model).filter(self.model.expires_at <= datetime.utcnow())
         await db.execute(query)
         await db.flush()
 
@@ -97,7 +97,7 @@ class RefreshTokenRepository(BaseRepository[RefreshToken, Any, Any]):
             rt = result.scalars().first()
             
             if rt:
-                rt.revoked_at = datetime.now(timezone.utc)
+                rt.revoked_at = datetime.utcnow()
                 db.add(rt)
                 
                 # Check tokens that were replaced by this token

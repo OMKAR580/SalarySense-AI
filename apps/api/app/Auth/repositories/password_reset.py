@@ -32,7 +32,7 @@ class PasswordResetRepository(BaseRepository[PasswordResetToken, Any, Any]):
         query = select(self.model).filter(
             self.model.token == token,
             self.model.is_used == False,
-            self.model.expires_at > datetime.now(timezone.utc)
+            self.model.expires_at > datetime.utcnow()
         )
         result = await db.execute(query)
         return result.scalars().first()
@@ -69,7 +69,7 @@ class PasswordResetRepository(BaseRepository[PasswordResetToken, Any, Any]):
         Return Type: None
         Raises: None
         """
-        query = delete(self.model).filter(self.model.expires_at <= datetime.now(timezone.utc))
+        query = delete(self.model).filter(self.model.expires_at <= datetime.utcnow())
         await db.execute(query)
         await db.flush()
 

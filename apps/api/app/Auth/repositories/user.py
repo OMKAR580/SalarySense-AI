@@ -192,7 +192,7 @@ class UserRepository(BaseRepository[User, Any, Any]):
         Return Type: User
         Raises: None
         """
-        user.last_login = datetime.now(timezone.utc)
+        user.last_login = datetime.utcnow()
         db.add(user)
         await db.flush()
         await db.refresh(user)
@@ -268,7 +268,7 @@ class UserRepository(BaseRepository[User, Any, Any]):
         Return Type: User
         Raises: None
         """
-        user.deleted_at = datetime.now(timezone.utc)
+        user.deleted_at = datetime.utcnow()
         user.is_active = False
         db.add(user)
         await db.flush()
