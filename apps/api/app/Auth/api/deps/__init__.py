@@ -73,6 +73,9 @@ def get_email_service() -> EmailService:
     # Load .env variables so os.getenv can detect them
     # Ensure this looks for .env in the right path, default is current directory but we can explicitly load if needed
     load_dotenv()
+    if os.getenv("RESEND_API_KEY"):
+        from app.Auth.services.email_service import ResendEmailService
+        return ResendEmailService()
     if os.getenv("SMTP_HOST"):
         return SMTPEmailService()
     return DummyEmailService()

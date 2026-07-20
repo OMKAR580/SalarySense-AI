@@ -158,3 +158,73 @@ class SMTPEmailService(EmailService):
         html = f"<p>Your MFA OTP code is: <strong>{otp}</strong></p>"
         loop = asyncio.get_running_loop()
         return await loop.run_in_executor(None, self._send, email, "MFA Verification Code", html)
+
+
+import httpx
+
+class ResendEmailService(EmailService):
+    def __init__(self):
+        load_dotenv()
+        self.api_key = os.getenv("RESEND_API_KEY", "")
+        self.from_email = os.getenv("SMTP_FROM", "onboarding@resend.dev")
+
+    async def _send_resend(self, to_email: str, subject: str, html_content: str) -> bool:
+        if not self.api_key:
+            logger.error("Resend API Key is missing")
+            return False
+        try:
+            logger.info(f"Sending email via Resend HTTP API to {to_email}")
+            async with httpx.AsyncClient(timeout=10.0) as client:
+                response = await client.post(
+                    "https://api.resend.com/emails",
+                    headers={
+                        "Authorization": f"Bearer {self.api_key}",
+                        "Content-Type": "application/json"
+                    },
+                    json={
+                        "from": self.from_email if self.from_email and "@" in self.from_email else "onboarding@resend.dev",
+                        "to": [to_email],
+                        "subject": subject,
+                        "html": html_content
+                    }
+                )
+                if response.status_code in (200, 201):
+                    logger.info("Email sent successfully via Resend HTTP API")
+                    return True
+                else:
+                    logger.error(f"Resend HTTP API failed with status {response.status_code}: {response.text}")
+                    return False
+        except Exception as e:
+            logger.error(f"Failed to send email via Resend API: {str(e)}")
+            return False
+
+    async def send_verification_email(self, email: str, token: str) -> bool:
+        html = f"""
+        <html>
+            <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+                <h2 style="color: #2c3e50; border-bottom: 1px solid #eee; padding-bottom: 10px;">SalarySense AI &mdash; Verify Your Email</h2>
+                <p>Hello,</p>
+                <p>Welcome to SalarySense AI.</p>
+                <p>Your verification code is:</p>
+                <div style="background-color: #f8f9fa; border-radius: 4px; padding: 15px; margin: 20px 0; text-align: center;">
+                    <span style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #007bff;">{token}</span>
+                </div>
+                <p>This code expires in 10 minutes.</p>
+                <p style="font-size: 0.9em; color: #6c757d; margin-top: 30px;">If you didn't request this,<br>please ignore this email.</p>
+                <p style="margin-top: 30px; font-weight: bold;">&mdash; SalarySense AI Team</p>
+            </body>
+        </html>
+        """
+        return await self._send_resend(email, "SalarySense AI — Verify Your Email", html)
+
+    async def send_reset_email(self, email: str, token: str) -> bool:
+        html = f"<p>Password reset code: <strong>{token}</strong></p>"
+        return await self._send_resend(email, "Reset Your Password", html)
+
+    async def send_password_changed_email(self, email: str) -> bool:
+        html = "<p>Your password has been changed successfully.</p>"
+        return await self._send_resend(email, "Password Changed Successfully", html)
+
+    async def send_mfa_otp(self, email: str, otp: str) -> bool:
+        html = f"<p>Your MFA OTP code is: <strong>{otp}</strong></p>"
+        return await self._send_resend(email, "MFA Verification Code", html)
