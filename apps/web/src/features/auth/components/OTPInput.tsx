@@ -108,7 +108,8 @@ export function OTPInput({
     if (!els) return 0;
 
     for (let i = 0; i < els.length; i++) {
-      if (clientX < els[i].getBoundingClientRect().right) return i;
+      const el = els[i];
+      if (el && clientX < el.getBoundingClientRect().right) return i;
     }
 
     return length - 1;
@@ -207,6 +208,17 @@ export function OTPInput({
       ? errorMessage
       : hint;
 
+  const blinkAnimationProps = reduce
+    ? {}
+    : {
+        animate: { opacity: [1, 1, 0, 0] },
+        transition: {
+          duration: 1,
+          repeat: Number.POSITIVE_INFINITY,
+          ease: "linear" as const,
+        },
+      };
+
   return (
     <div className={cn("inline-flex flex-col gap-2 w-full items-center", className)}>
       {label ? (
@@ -281,16 +293,7 @@ export function OTPInput({
                 {isActive && !showSuccess ? (
                   <motion.span
                     aria-hidden
-                    animate={reduce ? undefined : { opacity: [1, 1, 0, 0] }}
-                    transition={
-                      reduce
-                        ? undefined
-                        : {
-                            duration: 1,
-                            repeat: Number.POSITIVE_INFINITY,
-                            ease: "linear",
-                          }
-                    }
+                    {...blinkAnimationProps}
                     className={cn(
                       "pointer-events-none absolute top-1/2 h-6 w-px -translate-y-1/2 bg-blue-400",
                       char ? "right-3" : "left-1/2 -translate-x-1/2",

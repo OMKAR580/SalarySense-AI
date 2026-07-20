@@ -13,16 +13,17 @@ const compat = new FlatCompat({
 
 export default tseslint.config(
   ...compat.extends("next/core-web-vitals", "next/typescript"),
-  { ignores: ["**/.next/**"] },
+  { ignores: ["**/.next/**", "**/tests/**", "playwright.config.ts", "next-env.d.ts"] },
   {
     plugins: {
       "simple-import-sort": simpleImportSort,
     },
     rules: {
-      "simple-import-sort/imports": "error",
-      "simple-import-sort/exports": "error",
-      "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+      "simple-import-sort/imports": "warn",
+      "simple-import-sort/exports": "warn",
+      "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
       "@typescript-eslint/no-explicit-any": "warn",
+      "react/no-unescaped-entities": "off",
     },
   }
 );

@@ -63,7 +63,6 @@ export const ExplainabilityCard: React.FC<ExplainabilityCardProps> = ({
   ];
 
   const getVerdictText = () => {
-    const isHighEd = ["master's", "masters", "phd", "doctorate"].some(t => education.toLowerCase().includes(t));
     const modeText = isRemote 
       ? "remote flexibility (overhead savings adjustments)" 
       : "office-first collaboration (standard localized market bounds)";
