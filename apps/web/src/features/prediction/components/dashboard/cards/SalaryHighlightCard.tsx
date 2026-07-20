@@ -4,6 +4,8 @@ import { animate, motion, useMotionValue, useTransform } from "framer-motion";
 import React, { useEffect, useState } from "react";
 
 import { SalaryResult } from "../../../types";
+import { usePredictionStore } from "../../../store/usePredictionStore";
+import { formatCurrency } from "../../../utils/formatters";
 
 interface SalaryHighlightCardProps {
   salary: SalaryResult;
@@ -15,13 +17,7 @@ export const SalaryHighlightCard: React.FC<SalaryHighlightCardProps> = ({ salary
   const rounded = useTransform(count, Math.round);
   const [hasAnimated, setHasAnimated] = useState(false);
 
-  // Try loading currency preference from localStorage to scale the main counter value
-  let selectedCurrency = "USD";
-  if (typeof window !== "undefined") {
-    try {
-      selectedCurrency = localStorage.getItem("selected_currency") || "USD";
-    } catch {}
-  }
+  const selectedCurrency = usePredictionStore((state) => state.selectedCurrency);
 
   let symbol = "$";
   let factor = 1;
@@ -70,11 +66,11 @@ export const SalaryHighlightCard: React.FC<SalaryHighlightCardProps> = ({ salary
         <div className="flex flex-col text-sm text-white/50 bg-black/20 p-4 rounded-2xl border border-white/5">
           <div className="mb-1 flex justify-between gap-4">
             <span>Range Min</span>
-            <span className="text-white">{salary.formattedMin}</span>
+            <span className="text-white">{formatCurrency(salary.min)}</span>
           </div>
           <div className="flex justify-between gap-4">
             <span>Range Max</span>
-            <span className="text-white">{salary.formattedMax}</span>
+            <span className="text-white">{formatCurrency(salary.max)}</span>
           </div>
         </div>
       </div>

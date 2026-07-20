@@ -1,7 +1,9 @@
 import { motion } from "framer-motion";
 import React from "react";
 
-import { PredictionConfidence,SalaryResult } from "../../../types";
+import { PredictionConfidence, SalaryResult } from "../../../types";
+import { usePredictionStore } from "../../../store/usePredictionStore";
+import { formatCurrency } from "../../../utils/formatters";
 
 interface Props {
   salary: SalaryResult;
@@ -9,6 +11,9 @@ interface Props {
 }
 
 export const SalarySummaryCard: React.FC<Props> = ({ salary, confidence }) => {
+  // Subscribe to the store to trigger re-renders on currency change
+  usePredictionStore((state) => state.selectedCurrency);
+
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
@@ -24,12 +29,12 @@ export const SalarySummaryCard: React.FC<Props> = ({ salary, confidence }) => {
         <div>
           <div className="flex items-baseline gap-2 mb-2">
             <span className="text-5xl md:text-6xl font-light text-white tracking-tight">
-              {salary.formattedMedian}
+              {formatCurrency(salary.median)}
             </span>
             <span className="text-white/40 text-lg">/ yr</span>
           </div>
           <div className="text-white/60 font-light flex items-center gap-2">
-            Expected Range: <span className="text-white">{salary.formattedMin} — {salary.formattedMax}</span>
+            Expected Range: <span className="text-white">{formatCurrency(salary.min)} — {formatCurrency(salary.max)}</span>
           </div>
         </div>
 
@@ -49,9 +54,9 @@ export const SalarySummaryCard: React.FC<Props> = ({ salary, confidence }) => {
         <div className="absolute top-1/2 left-1/2 w-3 h-3 bg-white rounded-full -translate-x-1/2 -translate-y-1/2 shadow-[0_0_10px_rgba(255,255,255,0.5)]" />
       </div>
       <div className="flex justify-between mt-2 text-xs text-white/40 font-mono">
-        <span>{salary.formattedMin}</span>
-        <span>{salary.formattedMedian}</span>
-        <span>{salary.formattedMax}</span>
+        <span>{formatCurrency(salary.min)}</span>
+        <span>{formatCurrency(salary.median)}</span>
+        <span>{formatCurrency(salary.max)}</span>
       </div>
     </motion.div>
   );

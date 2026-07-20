@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { ArrowRight, Calendar,FileSearch, FileText, FormInput, User } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { usePredictionStore } from "../../store/usePredictionStore";
+import { formatCurrency } from "../../utils/formatters";
 
 interface PastPrediction {
   id: string;
@@ -11,10 +13,14 @@ interface PastPrediction {
   role: string;
   experience: any;
   salary: string;
+  median?: number;
   method: string;
 }
 
 export const RecentPredictions = () => {
+  // Subscribe to the store to trigger re-renders when the selected currency changes
+  usePredictionStore((state) => state.selectedCurrency);
+  
   const [history, setHistory] = useState<PastPrediction[]>([]);
 
   useEffect(() => {
@@ -115,7 +121,7 @@ export const RecentPredictions = () => {
                     </td>
                     <td className="px-6 py-4.5 font-mono">{item.experience} Years</td>
                     <td className="px-6 py-4.5 font-bold text-emerald-400 font-mono">
-                      {item.salary}
+                      {item.median !== undefined ? formatCurrency(item.median) : item.salary}
                     </td>
                     <td className="px-6 py-4.5 text-slate-400 font-sans flex items-center gap-1.5">
                       <Calendar className="w-3.5 h-3.5 text-slate-500" />

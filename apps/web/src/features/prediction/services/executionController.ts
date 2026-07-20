@@ -31,15 +31,18 @@ export const executionController = {
       
       // Save prediction to localStorage history for dashboard updates
       try {
+        const updatedSession = usePredictionStore.getState().session;
         localStorage.setItem("latest_prediction_result", JSON.stringify(result));
-        localStorage.setItem("latest_prediction_session", JSON.stringify(session));
+        localStorage.setItem("latest_prediction_session", JSON.stringify(updatedSession));
         localStorage.setItem(`prediction_summary_${result.id || "latest"}`, JSON.stringify(result));
         
         const historyJson = localStorage.getItem("prediction_history") || "[]";
         const history = JSON.parse(historyJson);
         
-        const role = session.manualPayload?.["role"] || session.manualPayload?.["job_title"] || "Software Engineer";
-        const experience = session.manualPayload?.["experience"] || session.manualPayload?.["years_of_experience"] || 0;
+        const role = updatedSession.manualPayload?.["role"] || updatedSession.manualPayload?.["job_title"] || "Software Engineer";
+        const experience = updatedSession.manualPayload?.["experience"] !== undefined 
+          ? updatedSession.manualPayload?.["experience"] 
+          : (updatedSession.manualPayload?.["years_of_experience"] !== undefined ? updatedSession.manualPayload?.["years_of_experience"] : 0);
         const salary = result.salary.formattedMedian || `$${result.salary.median.toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
         const method = session.method || "manual";
         
@@ -49,6 +52,7 @@ export const executionController = {
           role,
           experience,
           salary,
+          median: result.salary.median,
           method
         };
         
