@@ -106,7 +106,7 @@ export default function ProfilePage() {
     try {
       await apiClient.delete("/profile", { data: { password: deletePassword } });
       clearAuthSession();
-      router.push("/login");
+      window.location.href = "/login";
     } catch (err: any) {
       displayError(err.message || "Failed to delete account. Make sure your password is correct.");
     } finally {

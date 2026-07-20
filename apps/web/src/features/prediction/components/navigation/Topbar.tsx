@@ -46,7 +46,7 @@ export const Topbar = () => {
     } finally {
       clearAuthSession();
       setLogoutLoading(false);
-      router.push("/login");
+      window.location.href = "/login";
     }
   };
 
