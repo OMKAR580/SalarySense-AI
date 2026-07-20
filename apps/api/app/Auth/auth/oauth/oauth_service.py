@@ -217,6 +217,9 @@ class OAuthService:
                 if oauth_acc:
                     # Direct login
                     user = await self.user_repo.get_by_id(self.db, oauth_acc.user_id)
+                    if user and not user.is_verified:
+                        user.is_verified = True
+                        self.db.add(user)
                 else:
                     # Existing account check (No duplicate users constraint)
                     user = await self.user_repo.get_by_email(self.db, email)
@@ -230,6 +233,9 @@ class OAuthService:
                             "access_token": access_token_hash,
                             "refresh_token": tokens.get("refresh_token")
                         })
+                        if not user.is_verified:
+                            user.is_verified = True
+                            self.db.add(user)
                         if self.event_dispatcher:
                             await self.event_dispatcher.dispatch(OAuthLinked(user_id=user.id, provider=provider_name, timestamp=datetime.now(timezone.utc)))
                     else:
