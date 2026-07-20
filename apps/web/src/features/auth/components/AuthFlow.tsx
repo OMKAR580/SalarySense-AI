@@ -120,6 +120,7 @@ export const AuthFlow = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [verificationToken, setVerificationToken] = useState("");
+  const [verificationSuccess, setVerificationSuccess] = useState(false);
   const [oauthProvider, setOauthProvider] = useState("");
   const [oauthProviderAccountId, setOauthProviderAccountId] = useState("");
 
@@ -257,6 +258,7 @@ export const AuthFlow = () => {
     try {
       await apiClient.post("/auth/verify-email", { token });
 
+      setVerificationSuccess(true);
       setSuccessMessage("Email verified! You can now log in.");
       setError(null);
       // Keep email pre-filled so user goes straight to password step
@@ -279,6 +281,7 @@ export const AuthFlow = () => {
     setResendLoading(true);
     setError(null);
     setSuccessMessage(null);
+    setVerificationSuccess(false);
     try {
       await apiClient.post("/auth/resend-verification", { email });
       setSuccessMessage("email verification code sent to your spam box.");
@@ -298,6 +301,7 @@ export const AuthFlow = () => {
   const resetForm = () => {
     setError(null);
     setSuccessMessage(null);
+    setVerificationSuccess(false);
     setEmail("");
     setFirstName("");
     setLastName("");
@@ -1006,7 +1010,7 @@ export const AuthFlow = () => {
                       executeVerifyEmail(val);
                     }, 50);
                   }}
-                  status={error ? "error" : successMessage ? "success" : "idle"}
+                  status={error ? "error" : verificationSuccess ? "success" : "idle"}
                   disabled={loading}
                   autoFocus
                 />
