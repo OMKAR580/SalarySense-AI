@@ -299,7 +299,10 @@ async def oauth_callback(
         redirect_url = f"{settings.FRONTEND_URL}/login?access_token={access_token}&refresh_token={refresh_token}&user_id={user_id}&email={encoded_email}&username={encoded_username}"
         return RedirectResponse(url=redirect_url)
     except ValueError as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+        from app.core.config import settings
+        import urllib.parse
+        encoded_error = urllib.parse.quote(str(e))
+        return RedirectResponse(url=f"{settings.FRONTEND_URL}/login?error={encoded_error}")
 
 @router.post("/oauth/link", status_code=status.HTTP_200_OK)
 async def link_oauth(
