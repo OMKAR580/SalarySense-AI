@@ -56,13 +56,17 @@ class SMTPEmailService(EmailService):
     def _send(self, to_email: str, subject: str, body: str) -> bool:
         try:
             logger.info(f"Connecting to SMTP Host: {self.smtp_host}:{self.smtp_port}")
-            server = smtplib.SMTP(self.smtp_host, self.smtp_port, timeout=10)
-            logger.info("SMTP Host Connected")
+            if self.smtp_port == 465:
+                server = smtplib.SMTP_SSL(self.smtp_host, self.smtp_port, timeout=10)
+                logger.info("SMTP SSL Host Connected")
+            else:
+                server = smtplib.SMTP(self.smtp_host, self.smtp_port, timeout=10)
+                logger.info("SMTP Host Connected")
             
             # Identify ourselves to the SMTP server
             server.ehlo()
             
-            if self.use_tls:
+            if self.use_tls and self.smtp_port != 465:
                 try:
                     server.starttls()
                     server.ehlo()
