@@ -225,9 +225,6 @@ class OAuthService:
                     user = await self.user_repo.get_by_email(self.db, email)
                     
                     if user:
-                        if not user.is_verified:
-                            raise ValueError("This email is registered manually but not verified. Please log in manually and verify your email first.")
-                        
                         # Automatically link Google/GitHub/etc. identity to existing account
                         await self.oauth_repo.link_account(self.db, {
                             "user_id": user.id,
