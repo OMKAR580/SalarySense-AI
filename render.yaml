@@ -1,0 +1,33 @@
+services:
+  # Next.js Frontend Service
+  - type: web
+    name: salarysense-web
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build --workspace=web
+    startCommand: npm run start --workspace=web
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: https://salarysense-api.onrender.com/api # Replace with actual backend Render URL
+      - key: NODE_VERSION
+        value: 20.0.0
+
+  # FastAPI Backend Service
+  - type: web
+    name: salarysense-api
+    env: python
+    plan: free
+    rootDir: apps/api
+    buildCommand: pip install -r requirements.txt && python ../../Salary-Prediction-ML/train_advanced_model.py
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.5
+      - key: FRONTEND_URL
+        value: https://salarysense-web.onrender.com # Replace with actual frontend Render URL
+      - key: API_BASE_URL
+        value: https://salarysense-api.onrender.com/api/v1
+      - key: SECRET_KEY
+        value: production_super_secret_key_please_change
+      - key: REDIS_URL
+        value: redis://localhost:6379/0
